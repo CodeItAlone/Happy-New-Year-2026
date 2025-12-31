@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description"
+        content="Countdown to New Year 2026 - A moment of reflection as one year ends and another begins.">
+    <meta name="theme-color" content="#0a0a0f">
+    <title>New Year 2026 | Countdown</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Space+Grotesk:wght@500;600;700&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+
+<body>
+    <canvas id="spaceCanvas" aria-hidden="true"></canvas>
+
+    <div class="background" aria-hidden="true">
+        <div class="planet planet--earth">
+            <img src="assets/earth.jpg" alt="" loading="eager">
+            <div class="planet__glow planet__glow--earth"></div>
+        </div>
+        <div class="planet planet--mars">
+            <img src="assets/mars.png" alt="" loading="lazy">
+        </div>
+        <div class="planet planet--purple">
+            <img src="assets/purple-planet.png" alt="" loading="lazy">
+        </div>
+    </div>
+
+    <div class="page-overlay" id="pageOverlay" aria-hidden="true"></div>
+
+    <main class="main">
+        <section class="hero">
+            <p class="hero__tagline">New Year 2026</p>
+            <h1 class="hero__title">
+                <span>One year ends.</span>
+                <span>Another begins.</span>
+            </h1>
+
+            <div class="countdown" role="timer" aria-label="Countdown to New Year 2026">
+                <div class="countdown__block">
+                    <div class="countdown__digits" id="days">
+                        <span class="countdown__digit">0</span>
+                        <span class="countdown__digit">0</span>
+                    </div>
+                    <span class="countdown__label">Days</span>
+                </div>
+                <span class="countdown__separator">:</span>
+                <div class="countdown__block">
+                    <div class="countdown__digits" id="hours">
+                        <span class="countdown__digit">0</span>
+                        <span class="countdown__digit">0</span>
+                    </div>
+                    <span class="countdown__label">Hours</span>
+                </div>
+                <span class="countdown__separator">:</span>
+                <div class="countdown__block">
+                    <div class="countdown__digits" id="minutes">
+                        <span class="countdown__digit">0</span>
+                        <span class="countdown__digit">0</span>
+                    </div>
+                    <span class="countdown__label">Minutes</span>
+                </div>
+                <span class="countdown__separator">:</span>
+                <div class="countdown__block">
+                    <div class="countdown__digits" id="seconds">
+                        <span class="countdown__digit">0</span>
+                        <span class="countdown__digit">0</span>
+                    </div>
+                    <span class="countdown__label">Seconds</span>
+                </div>
+            </div>
+
+            <div class="cta">
+                <button class="cta__button" id="ctaButton" disabled aria-describedby="ctaDescription">
+                    Enter 2026
+                </button>
+                <span id="ctaDescription" class="visually-hidden">
+                    Button will be enabled when the countdown reaches zero
+                </span>
+            </div>
+        </section>
+    </main>
+
+    <script src="js/animations.js"></script>
+    <script src="js/space.js"></script>
+    <script src="js/snow.js"></script>
+    <script src="js/countdown.js"></script>
+</body>
+
+</html>

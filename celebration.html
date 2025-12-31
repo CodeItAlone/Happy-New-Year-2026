@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Happy New Year 2026 - A message to the future.">
+    <meta name="theme-color" content="#0a0a0f">
+    <title>Happy New Year 2026!</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Space+Grotesk:wght@500;600;700&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+
+<body>
+    <canvas id="spaceCanvas" aria-hidden="true"></canvas>
+
+    <div class="background" id="background" aria-hidden="true">
+        <div class="planet planet--earth" id="earthPlanet">
+            <img src="assets/earth.jpg" alt="" loading="eager">
+            <div class="planet__glow planet__glow--earth"></div>
+        </div>
+        <div class="planet planet--mars" id="marsPlanet">
+            <img src="assets/mars.png" alt="" loading="lazy">
+        </div>
+        <div class="planet planet--purple" id="purplePlanet">
+            <img src="assets/purple-planet.png" alt="" loading="lazy">
+        </div>
+    </div>
+
+    <div class="page-overlay active" id="pageOverlay" aria-hidden="true"></div>
+
+    <main class="main">
+        <section class="celebration">
+            <header class="celebration__header">
+                <h1 class="celebration__year">2026</h1>
+                <p class="celebration__subtitle">Happy New Year</p>
+            </header>
+
+            <article class="message" id="messageContainer">
+                <p class="message__content" id="messageContent">
+                    <span class="message__cursor" id="cursor"></span>
+                </p>
+            </article>
+
+            <div class="restart">
+                <button class="restart__button" id="restartButton">
+                    ← Watch the countdown again
+                </button>
+            </div>
+        </section>
+    </main>
+
+    <script src="js/animations.js"></script>
+    <script src="js/space.js"></script>
+    <script src="js/snow.js"></script>
+    <script src="js/message.js"></script>
+</body>
+
+</html>

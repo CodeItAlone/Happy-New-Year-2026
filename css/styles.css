@@ -1,0 +1,643 @@
+/* ============================================
+   NEW YEAR 2026 - Design System & Styles
+   ============================================ */
+
+/* --- CSS Custom Properties (Design Tokens) --- */
+:root {
+  /* Colors - Midnight Violet Theme */
+  --bg-primary: #0a0a0f;
+  --bg-secondary: #12121a;
+  --bg-gradient-start: #0a0a0f;
+  --bg-gradient-mid: #1a1025;
+  --bg-gradient-end: #0f0a1a;
+
+  --accent: #a78bfa;
+  --accent-glow: #7c3aed;
+  --accent-dim: #6d5aad;
+
+  --text-primary: #f8f8ff;
+  --text-secondary: #9ca3af;
+  --text-muted: #6b7280;
+
+  /* Typography */
+  --font-primary: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  --font-display: 'Space Grotesk', var(--font-primary);
+
+  /* Spacing System (8px base) */
+  --space-xs: 0.5rem;
+  --space-sm: 1rem;
+  --space-md: 1.5rem;
+  --space-lg: 2rem;
+  --space-xl: 3rem;
+  --space-2xl: 4rem;
+  --space-3xl: 6rem;
+
+  /* Transitions */
+  --transition-fast: 150ms ease;
+  --transition-base: 300ms ease;
+  --transition-slow: 500ms ease;
+  --transition-smooth: 600ms cubic-bezier(0.4, 0, 0.2, 1);
+
+  /* Effects */
+  --glow-sm: 0 0 20px rgba(167, 139, 250, 0.3);
+  --glow-md: 0 0 40px rgba(167, 139, 250, 0.4);
+  --glow-lg: 0 0 60px rgba(167, 139, 250, 0.5);
+}
+
+/* --- Reset & Base --- */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  font-size: 16px;
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: var(--font-primary);
+  background-color: var(--bg-primary);
+  color: var(--text-primary);
+  line-height: 1.6;
+  min-height: 100vh;
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* --- Space Canvas --- */
+#spaceCanvas {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: -2;
+  pointer-events: none;
+}
+
+/* --- 3D Earth Container --- */
+.earth3d-container {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: clamp(350px, 45vw, 550px);
+  height: clamp(350px, 45vw, 550px);
+  z-index: -1;
+  opacity: 0.6;
+  transition: opacity 0.3s ease;
+}
+
+.earth3d-container:hover {
+  opacity: 0.85;
+}
+
+.earth3d-container canvas {
+  width: 100% !important;
+  height: 100% !important;
+  cursor: grab;
+}
+
+.earth3d-container canvas:active {
+  cursor: grabbing;
+}
+
+/* --- Animated Background --- */
+.background {
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+/* --- Planets --- */
+.planet {
+  position: absolute;
+  pointer-events: none;
+  animation: planetFloat 25s ease-in-out infinite;
+}
+
+.planet img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  border-radius: 50%;
+}
+
+/* Earth - Centered behind content */
+.planet--earth {
+  width: clamp(300px, 40vw, 500px);
+  height: clamp(300px, 40vw, 500px);
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  opacity: 0.5;
+  pointer-events: auto;
+  cursor: grab;
+  transition: opacity 0.3s ease;
+}
+
+.planet--earth:hover {
+  opacity: 0.7;
+}
+
+.planet--earth:active {
+  cursor: grabbing;
+}
+
+.planet--earth img {
+  filter: brightness(0.9) saturate(1.1);
+  will-change: transform;
+}
+
+/* Earth Glow */
+.planet__glow--earth {
+  position: absolute;
+  inset: -20%;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(59, 130, 246, 0.3) 0%, rgba(59, 130, 246, 0.1) 40%, transparent 70%);
+  animation: glowPulse 4s ease-in-out infinite;
+  pointer-events: none;
+}
+
+@keyframes glowPulse {
+
+  0%,
+  100% {
+    opacity: 0.6;
+    transform: scale(1);
+  }
+
+  50% {
+    opacity: 0.9;
+    transform: scale(1.05);
+  }
+}
+
+/* Mars - Top Right */
+.planet--mars {
+  width: clamp(80px, 12vw, 150px);
+  height: clamp(80px, 12vw, 150px);
+  top: 8%;
+  right: 10%;
+  opacity: 0.7;
+  animation-delay: -5s;
+}
+
+.planet--mars img {
+  filter: brightness(0.85) saturate(1.2);
+}
+
+/* Purple Planet - Bottom Left */
+.planet--purple {
+  width: clamp(100px, 15vw, 200px);
+  height: clamp(100px, 15vw, 200px);
+  bottom: 10%;
+  left: 8%;
+  opacity: 0.6;
+  animation-delay: -12s;
+}
+
+.planet--purple img {
+  filter: brightness(0.8) hue-rotate(10deg);
+}
+
+@keyframes planetFloat {
+
+  0%,
+  100% {
+    transform: translate(-50%, -50%) translateY(0) scale(1);
+  }
+
+  25% {
+    transform: translate(-50%, -50%) translateY(-15px) scale(1.02);
+  }
+
+  50% {
+    transform: translate(-50%, -50%) translateY(10px) scale(0.98);
+  }
+
+  75% {
+    transform: translate(-50%, -50%) translateY(-8px) scale(1.01);
+  }
+}
+
+/* Non-centered planets don't need translate offset */
+.planet--mars,
+.planet--purple {
+  animation: planetFloatSimple 25s ease-in-out infinite;
+}
+
+@keyframes planetFloatSimple {
+
+  0%,
+  100% {
+    transform: translateY(0) scale(1);
+  }
+
+  25% {
+    transform: translateY(-15px) scale(1.02);
+  }
+
+  50% {
+    transform: translateY(10px) scale(0.98);
+  }
+
+  75% {
+    transform: translateY(-8px) scale(1.01);
+  }
+}
+
+/* --- Page Transition Overlay --- */
+.page-overlay {
+  position: fixed;
+  inset: 0;
+  background: var(--bg-primary);
+  z-index: 9999;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity var(--transition-slow);
+}
+
+.page-overlay.active {
+  opacity: 1;
+  pointer-events: all;
+}
+
+/* --- Main Container --- */
+.main {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: var(--space-lg);
+  text-align: center;
+}
+
+/* --- Hero Section --- */
+.hero {
+  max-width: 800px;
+  width: 100%;
+}
+
+.hero__tagline {
+  font-size: clamp(0.875rem, 2vw, 1rem);
+  color: var(--text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.3em;
+  margin-bottom: var(--space-md);
+  opacity: 0;
+  animation: fadeUp 0.8s var(--transition-smooth) forwards;
+  animation-delay: 0.2s;
+}
+
+.hero__title {
+  font-family: var(--font-display);
+  font-size: clamp(2rem, 6vw, 3.5rem);
+  font-weight: 600;
+  line-height: 1.2;
+  margin-bottom: var(--space-xl);
+  opacity: 0;
+  animation: fadeUp 0.8s var(--transition-smooth) forwards;
+  animation-delay: 0.4s;
+}
+
+.hero__title span {
+  display: block;
+  background: linear-gradient(135deg, var(--text-primary) 0%, var(--accent) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+@keyframes fadeUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* --- Countdown Timer --- */
+.countdown {
+  display: flex;
+  justify-content: center;
+  gap: var(--space-sm);
+  margin-bottom: var(--space-2xl);
+  opacity: 0;
+  animation: fadeUp 0.8s var(--transition-smooth) forwards;
+  animation-delay: 0.6s;
+}
+
+.countdown__block {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-width: 80px;
+}
+
+.countdown__digits {
+  font-family: var(--font-display);
+  font-size: clamp(2.5rem, 8vw, 4.5rem);
+  font-weight: 700;
+  color: var(--text-primary);
+  line-height: 1;
+  position: relative;
+  overflow: hidden;
+}
+
+.countdown__digit {
+  display: inline-block;
+  transition: transform var(--transition-base), opacity var(--transition-base);
+}
+
+.countdown__digit.changing {
+  animation: digitFlip 0.4s ease-out;
+}
+
+@keyframes digitFlip {
+  0% {
+    transform: translateY(-100%);
+    opacity: 0;
+  }
+
+  50% {
+    transform: translateY(10%);
+    opacity: 0.5;
+  }
+
+  100% {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+.countdown__label {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.15em;
+  margin-top: var(--space-xs);
+}
+
+.countdown__separator {
+  font-family: var(--font-display);
+  font-size: clamp(2rem, 6vw, 3.5rem);
+  color: var(--accent-dim);
+  align-self: flex-start;
+  margin-top: 0.5rem;
+  animation: pulse 1s ease-in-out infinite;
+}
+
+@keyframes pulse {
+
+  0%,
+  100% {
+    opacity: 1;
+  }
+
+  50% {
+    opacity: 0.3;
+  }
+}
+
+/* --- CTA Button --- */
+.cta {
+  opacity: 0;
+  animation: fadeUp 0.8s var(--transition-smooth) forwards;
+  animation-delay: 0.8s;
+}
+
+.cta__button {
+  font-family: var(--font-primary);
+  font-size: 1rem;
+  font-weight: 500;
+  padding: var(--space-sm) var(--space-xl);
+  border: 2px solid var(--accent);
+  border-radius: 50px;
+  background: transparent;
+  color: var(--accent);
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+  transition: all var(--transition-base);
+}
+
+.cta__button::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg, var(--accent) 0%, var(--accent-glow) 100%);
+  opacity: 0;
+  transition: opacity var(--transition-base);
+  z-index: -1;
+}
+
+.cta__button:not(:disabled):hover {
+  color: var(--bg-primary);
+  border-color: transparent;
+  box-shadow: var(--glow-md);
+  transform: translateY(-2px);
+}
+
+.cta__button:not(:disabled):hover::before {
+  opacity: 1;
+}
+
+.cta__button:not(:disabled):active {
+  transform: translateY(0);
+}
+
+.cta__button:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+  border-color: var(--text-muted);
+  color: var(--text-muted);
+}
+
+.cta__button:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 4px;
+}
+
+/* --- Page 2: Celebration Styles --- */
+.celebration {
+  max-width: 900px;
+  width: 100%;
+  padding: var(--space-lg);
+}
+
+.celebration__header {
+  margin-bottom: var(--space-3xl);
+}
+
+.celebration__year {
+  font-family: var(--font-display);
+  font-size: clamp(4rem, 15vw, 10rem);
+  font-weight: 700;
+  line-height: 0.9;
+  background: linear-gradient(135deg, var(--accent) 0%, #ec4899 50%, #f97316 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  opacity: 0;
+  transform: scale(0.8);
+  animation: yearReveal 1s var(--transition-smooth) forwards;
+}
+
+@keyframes yearReveal {
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+.celebration__subtitle {
+  font-size: clamp(1.25rem, 3vw, 1.75rem);
+  color: var(--text-secondary);
+  margin-top: var(--space-sm);
+  opacity: 0;
+  animation: fadeUp 0.8s var(--transition-smooth) forwards;
+  animation-delay: 0.3s;
+}
+
+/* Message Container */
+.message {
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 16px;
+  padding: var(--space-xl);
+  text-align: left;
+  opacity: 0;
+  animation: fadeUp 0.8s var(--transition-smooth) forwards;
+  animation-delay: 0.5s;
+}
+
+.message__content {
+  font-size: clamp(1.125rem, 2.5vw, 1.5rem);
+  line-height: 1.8;
+  color: var(--text-primary);
+  min-height: 150px;
+}
+
+.message__cursor {
+  display: inline-block;
+  width: 3px;
+  height: 1.2em;
+  background: var(--accent);
+  margin-left: 2px;
+  vertical-align: text-bottom;
+  animation: blink 1s step-end infinite;
+}
+
+@keyframes blink {
+
+  0%,
+  100% {
+    opacity: 1;
+  }
+
+  50% {
+    opacity: 0;
+  }
+}
+
+/* Message Complete State */
+.message--complete .message__cursor {
+  animation: none;
+  opacity: 0;
+}
+
+/* Restart Button */
+.restart {
+  margin-top: var(--space-xl);
+  opacity: 0;
+  animation: fadeUp 0.8s var(--transition-smooth) forwards;
+  animation-delay: 0.7s;
+}
+
+.restart__button {
+  font-family: var(--font-primary);
+  font-size: 0.875rem;
+  color: var(--text-secondary);
+  background: none;
+  border: none;
+  cursor: pointer;
+  text-decoration: underline;
+  text-underline-offset: 4px;
+  transition: color var(--transition-fast);
+}
+
+.restart__button:hover {
+  color: var(--accent);
+}
+
+/* --- Responsive Adjustments --- */
+@media (max-width: 640px) {
+  .countdown {
+    gap: var(--space-xs);
+  }
+
+  .countdown__block {
+    min-width: 60px;
+  }
+
+  .countdown__separator {
+    font-size: 1.5rem;
+    margin-top: 1rem;
+  }
+
+  .message {
+    padding: var(--space-md);
+  }
+}
+
+@media (max-width: 480px) {
+  .countdown__block {
+    min-width: 50px;
+  }
+
+  .cta__button {
+    padding: var(--space-sm) var(--space-lg);
+  }
+}
+
+/* --- Reduced Motion --- */
+@media (prefers-reduced-motion: reduce) {
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+
+  .countdown__digit.changing {
+    animation: none;
+  }
+
+  .background::before {
+    animation: none;
+  }
+
+  .stars {
+    animation: none;
+    opacity: 0.6;
+  }
+
+  .orb {
+    animation: none;
+  }
+}
