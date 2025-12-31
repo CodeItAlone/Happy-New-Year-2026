@@ -1,14 +1,6 @@
-/**
- * ============================================
- * SNOW.JS - Snowfall Animation
- * ============================================
- * Canvas-based falling snow particles
- */
-
 const Snowfall = (function () {
     'use strict';
 
-    // ========== Configuration ==========
     const CONFIG = {
         snowflakeCount: 50,
         minSize: 2,
@@ -19,17 +11,13 @@ const Snowfall = (function () {
         opacity: 0.8
     };
 
-    // ========== State ==========
     let canvas, ctx;
     let snowflakes = [];
     let animationId = null;
     let isRunning = false;
 
-    // ========== Snowflake Class ==========
     class Snowflake {
-        constructor() {
-            this.reset(true);
-        }
+        constructor() { this.reset(true); }
 
         reset(initial = false) {
             this.x = Math.random() * (canvas ? canvas.width : window.innerWidth);
@@ -42,17 +30,10 @@ const Snowfall = (function () {
         }
 
         update() {
-            // Fall down
             this.y += this.speed;
-
-            // Wobble side to side
             this.wobble += this.wobbleSpeed;
             this.x += Math.sin(this.wobble) * 0.5 + CONFIG.wind;
-
-            // Reset if off screen
-            if (this.y > canvas.height + 10 || this.x > canvas.width + 10 || this.x < -10) {
-                this.reset();
-            }
+            if (this.y > canvas.height + 10 || this.x > canvas.width + 10 || this.x < -10) this.reset();
         }
 
         draw() {
@@ -61,14 +42,10 @@ const Snowfall = (function () {
             ctx.fillStyle = `rgba(255, 255, 255, ${this.opacity})`;
             ctx.fill();
 
-            // Add soft glow
             if (this.size > 3) {
                 ctx.beginPath();
                 ctx.arc(this.x, this.y, this.size * 2, 0, Math.PI * 2);
-                const gradient = ctx.createRadialGradient(
-                    this.x, this.y, 0,
-                    this.x, this.y, this.size * 2
-                );
+                const gradient = ctx.createRadialGradient(this.x, this.y, 0, this.x, this.y, this.size * 2);
                 gradient.addColorStop(0, `rgba(255, 255, 255, ${this.opacity * 0.3})`);
                 gradient.addColorStop(1, 'transparent');
                 ctx.fillStyle = gradient;
@@ -77,7 +54,6 @@ const Snowfall = (function () {
         }
     }
 
-    // ========== Initialization ==========
     function init() {
         createCanvas();
         createSnowflakes();
@@ -89,20 +65,11 @@ const Snowfall = (function () {
         if (!canvas) {
             canvas = document.createElement('canvas');
             canvas.id = 'snowCanvas';
-            canvas.style.cssText = `
-                position: fixed;
-                top: 0;
-                left: 0;
-                width: 100%;
-                height: 100%;
-                z-index: 100;
-                pointer-events: none;
-            `;
+            canvas.style.cssText = `position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 100; pointer-events: none;`;
             document.body.appendChild(canvas);
         }
         ctx = canvas.getContext('2d');
         resizeCanvas();
-
         window.addEventListener('resize', resizeCanvas);
     }
 
@@ -113,24 +80,13 @@ const Snowfall = (function () {
 
     function createSnowflakes() {
         snowflakes = [];
-        for (let i = 0; i < CONFIG.snowflakeCount; i++) {
-            snowflakes.push(new Snowflake());
-        }
+        for (let i = 0; i < CONFIG.snowflakeCount; i++) snowflakes.push(new Snowflake());
     }
 
-    // ========== Animation Loop ==========
     function animate() {
         if (!isRunning) return;
-
-        // Clear canvas
         ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-        // Update and draw snowflakes
-        for (const flake of snowflakes) {
-            flake.update();
-            flake.draw();
-        }
-
+        for (const flake of snowflakes) { flake.update(); flake.draw(); }
         animationId = requestAnimationFrame(animate);
     }
 
@@ -142,21 +98,13 @@ const Snowfall = (function () {
 
     function stop() {
         isRunning = false;
-        if (animationId) {
-            cancelAnimationFrame(animationId);
-            animationId = null;
-        }
+        if (animationId) { cancelAnimationFrame(animationId); animationId = null; }
     }
 
-    // Check for reduced motion preference
-    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
-        CONFIG.snowflakeCount = 30;
-        CONFIG.maxSpeed = 1;
-    }
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) { CONFIG.snowflakeCount = 15; CONFIG.maxSpeed = 1; }
+    if (window.innerWidth <= 640) CONFIG.snowflakeCount = 25;
 
-    // ========== Public API ==========
     return { init, start, stop };
 })();
 
-// Initialize when DOM is ready
 document.addEventListener('DOMContentLoaded', Snowfall.init);

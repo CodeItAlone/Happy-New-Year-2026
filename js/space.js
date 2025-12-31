@@ -1,14 +1,6 @@
-/**
- * ============================================
- * SPACE.JS - Animated Space Background
- * ============================================
- * Canvas-based moving starfield with floating planets
- */
-
 const SpaceBackground = (function () {
     'use strict';
 
-    // ========== Configuration ==========
     const CONFIG = {
         starCount: 500,
         starSpeed: 0.3,
@@ -16,7 +8,6 @@ const SpaceBackground = (function () {
         mouseParallaxStrength: 0.02
     };
 
-    // ========== State ==========
     let canvas, ctx;
     let stars = [];
     let mouseX = 0, mouseY = 0;
@@ -24,11 +15,9 @@ const SpaceBackground = (function () {
     let animationId = null;
     let isRunning = false;
 
-    // ========== Star Class ==========
     class Star {
         constructor() {
             this.reset();
-            // Start at random position
             this.z = Math.random() * canvas.width;
         }
 
@@ -36,53 +25,35 @@ const SpaceBackground = (function () {
             this.x = (Math.random() - 0.5) * canvas.width * 2;
             this.y = (Math.random() - 0.5) * canvas.height * 2;
             this.z = canvas.width;
-            // Larger stars (increased from 0.5-2.5 to 1-4)
             this.size = Math.random() * 3 + 1;
             this.color = CONFIG.starColors[Math.floor(Math.random() * CONFIG.starColors.length)];
-            // Higher opacity (0.7-1.0 instead of 0.5-1.0)
             this.opacity = Math.random() * 0.3 + 0.7;
             this.twinkleSpeed = Math.random() * 0.02 + 0.01;
             this.twinkleOffset = Math.random() * Math.PI * 2;
         }
 
         update(deltaTime) {
-            // Move towards viewer (z decreases)
             this.z -= CONFIG.starSpeed * deltaTime * 0.1;
-
-            // Reset if too close
-            if (this.z <= 0) {
-                this.reset();
-            }
-
-            // Twinkle effect (reduced dimming range)
+            if (this.z <= 0) this.reset();
             this.currentOpacity = this.opacity * (0.8 + Math.sin(Date.now() * this.twinkleSpeed + this.twinkleOffset) * 0.2);
         }
 
         draw() {
-            // Project 3D to 2D
             const centerX = canvas.width / 2;
             const centerY = canvas.height / 2;
-
             const scale = canvas.width / this.z;
             const x2d = (this.x * scale) + centerX + (mouseX * CONFIG.mouseParallaxStrength * this.z);
             const y2d = (this.y * scale) + centerY + (mouseY * CONFIG.mouseParallaxStrength * this.z);
-
-            // Size based on depth (increased multiplier)
             const size = this.size * scale * 0.8;
 
-            // Skip if off screen
-            if (x2d < -10 || x2d > canvas.width + 10 || y2d < -10 || y2d > canvas.height + 10) {
-                return;
-            }
+            if (x2d < -10 || x2d > canvas.width + 10 || y2d < -10 || y2d > canvas.height + 10) return;
 
-            // Draw star with glow (always add glow now)
             ctx.beginPath();
             ctx.arc(x2d, y2d, Math.max(size, 1), 0, Math.PI * 2);
             ctx.fillStyle = this.color;
             ctx.globalAlpha = this.currentOpacity;
             ctx.fill();
 
-            // Add glow for all visible stars
             if (size > 0.8) {
                 ctx.beginPath();
                 ctx.arc(x2d, y2d, size * 2.5, 0, Math.PI * 2);
@@ -94,12 +65,10 @@ const SpaceBackground = (function () {
                 ctx.globalAlpha = this.currentOpacity * 0.5;
                 ctx.fill();
             }
-
             ctx.globalAlpha = 1;
         }
     }
 
-    // ========== Initialization ==========
     function init() {
         createCanvas();
         createStars();
@@ -112,15 +81,7 @@ const SpaceBackground = (function () {
         if (!canvas) {
             canvas = document.createElement('canvas');
             canvas.id = 'spaceCanvas';
-            canvas.style.cssText = `
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        z-index: -2;
-        pointer-events: none;
-      `;
+            canvas.style.cssText = `position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -2; pointer-events: none;`;
             document.body.insertBefore(canvas, document.body.firstChild);
         }
         ctx = canvas.getContext('2d');
@@ -138,40 +99,29 @@ const SpaceBackground = (function () {
 
     function createStars() {
         stars = [];
-        for (let i = 0; i < CONFIG.starCount; i++) {
-            stars.push(new Star());
-        }
+        for (let i = 0; i < CONFIG.starCount; i++) stars.push(new Star());
     }
 
     function bindEvents() {
-        window.addEventListener('resize', () => {
-            resizeCanvas();
-            createStars();
-        });
-
+        window.addEventListener('resize', () => { resizeCanvas(); createStars(); });
         document.addEventListener('mousemove', (e) => {
             targetMouseX = e.clientX - window.innerWidth / 2;
             targetMouseY = e.clientY - window.innerHeight / 2;
         });
     }
 
-    // ========== Animation Loop ==========
     let lastTime = 0;
 
     function animate(currentTime) {
         if (!isRunning) return;
-
         const deltaTime = currentTime - lastTime;
         lastTime = currentTime;
 
-        // Smooth mouse interpolation
         mouseX += (targetMouseX - mouseX) * 0.05;
         mouseY += (targetMouseY - mouseY) * 0.05;
 
-        // Clear canvas
         ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-        // Update and draw stars
         for (const star of stars) {
             star.update(deltaTime);
             star.draw();
@@ -189,33 +139,16 @@ const SpaceBackground = (function () {
 
     function stop() {
         isRunning = false;
-        if (animationId) {
-            cancelAnimationFrame(animationId);
-            animationId = null;
-        }
+        if (animationId) { cancelAnimationFrame(animationId); animationId = null; }
     }
 
-    // Check for reduced motion preference
-    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
-        CONFIG.starSpeed = 0;
-    }
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) CONFIG.starSpeed = 0;
 
-    // ========== Public API ==========
-    return {
-        init,
-        start,
-        stop
-    };
+    return { init, start, stop };
 })();
 
-// Initialize when DOM is ready
 document.addEventListener('DOMContentLoaded', SpaceBackground.init);
 
-/**
- * ============================================
- * EARTH ROTATION - Interactive Drag to Spin
- * ============================================
- */
 const EarthRotation = (function () {
     'use strict';
 
@@ -234,11 +167,8 @@ const EarthRotation = (function () {
         earthImg = earth.querySelector('img');
         if (!earthImg) return;
 
-        // Make Earth interactive
         earth.style.pointerEvents = 'auto';
         earth.style.cursor = 'grab';
-
-        // Remove auto-spin animation
         earth.style.animation = 'none';
         earthImg.style.transition = 'none';
 
@@ -247,17 +177,12 @@ const EarthRotation = (function () {
     }
 
     function bindEvents() {
-        // Mouse events
         earth.addEventListener('mousedown', onDragStart);
         document.addEventListener('mousemove', onDragMove);
         document.addEventListener('mouseup', onDragEnd);
-
-        // Touch events
         earth.addEventListener('touchstart', onTouchStart, { passive: false });
         document.addEventListener('touchmove', onTouchMove, { passive: false });
         document.addEventListener('touchend', onDragEnd);
-
-        // Prevent context menu on long press
         earth.addEventListener('contextmenu', (e) => e.preventDefault());
     }
 
@@ -280,28 +205,23 @@ const EarthRotation = (function () {
 
     function onDragMove(e) {
         if (!isDragging) return;
-
         const clientX = e.clientX || (e.touches && e.touches[0].clientX);
         if (clientX === undefined) return;
-
         const deltaX = clientX - startX;
-        velocity = deltaX * 0.5; // Sensitivity
+        velocity = deltaX * 0.5;
         currentRotation += deltaX * 0.5;
         startX = clientX;
-
         applyRotation();
     }
 
     function onTouchMove(e) {
         if (!isDragging || e.touches.length !== 1) return;
         e.preventDefault();
-
         const clientX = e.touches[0].clientX;
         const deltaX = clientX - startX;
         velocity = deltaX * 0.5;
         currentRotation += deltaX * 0.5;
         startX = clientX;
-
         applyRotation();
     }
 
@@ -312,15 +232,12 @@ const EarthRotation = (function () {
     }
 
     function applyRotation() {
-        if (earthImg) {
-            earthImg.style.transform = `rotate(${currentRotation}deg)`;
-        }
+        if (earthImg) earthImg.style.transform = `rotate(${currentRotation}deg)`;
     }
 
     function startMomentumLoop() {
         function loop() {
             if (!isDragging && Math.abs(velocity) > 0.1) {
-                // Apply momentum (friction)
                 velocity *= 0.98;
                 currentRotation += velocity;
                 applyRotation();
@@ -331,13 +248,10 @@ const EarthRotation = (function () {
     }
 
     function destroy() {
-        if (animationId) {
-            cancelAnimationFrame(animationId);
-        }
+        if (animationId) cancelAnimationFrame(animationId);
     }
 
     return { init, destroy };
 })();
 
-// Initialize Earth rotation
 document.addEventListener('DOMContentLoaded', EarthRotation.init);

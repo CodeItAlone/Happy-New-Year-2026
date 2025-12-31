@@ -44,6 +44,69 @@
   --glow-lg: 0 0 60px rgba(167, 139, 250, 0.5);
 }
 
+/* --- Welcome Screen --- */
+.welcome-screen {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  background: var(--bg-primary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: opacity 0.8s ease, visibility 0.8s ease;
+}
+
+.welcome-screen.fade-out {
+  opacity: 0;
+  visibility: hidden;
+}
+
+.welcome-content {
+  text-align: center;
+}
+
+.welcome-text {
+  font-family: var(--font-display);
+  font-size: clamp(1.5rem, 5vw, 3rem);
+  font-weight: 500;
+  color: var(--text-primary);
+  letter-spacing: 0.1em;
+  opacity: 0;
+  animation: welcomeFadeIn 1s ease forwards;
+  animation-delay: 0.3s;
+}
+
+.welcome-line {
+  width: 0;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, var(--accent), transparent);
+  margin: 1.5rem auto 0;
+  animation: welcomeLineExpand 1.2s ease forwards;
+  animation-delay: 0.8s;
+}
+
+@keyframes welcomeFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes welcomeLineExpand {
+  from {
+    width: 0;
+  }
+
+  to {
+    width: 200px;
+  }
+}
+
 /* --- Reset & Base --- */
 *,
 *::before,
@@ -584,32 +647,158 @@ body {
 }
 
 /* --- Responsive Adjustments --- */
+
+/* Tablet */
+@media (max-width: 768px) {
+  .hero__title {
+    font-size: clamp(1.75rem, 5vw, 2.5rem);
+  }
+
+  .hero__tagline {
+    letter-spacing: 0.2em;
+  }
+
+  .planet--earth {
+    width: clamp(200px, 50vw, 350px);
+    height: clamp(200px, 50vw, 350px);
+    opacity: 0.35;
+  }
+
+  .planet--mars {
+    width: clamp(60px, 10vw, 100px);
+    height: clamp(60px, 10vw, 100px);
+    top: 5%;
+    right: 5%;
+  }
+
+  .planet--purple {
+    width: clamp(80px, 12vw, 150px);
+    height: clamp(80px, 12vw, 150px);
+    bottom: 5%;
+    left: 5%;
+  }
+
+  .celebration__year {
+    font-size: clamp(3rem, 12vw, 6rem);
+  }
+}
+
+/* Mobile */
 @media (max-width: 640px) {
+  html {
+    font-size: 14px;
+  }
+
+  .main {
+    padding: var(--space-sm);
+  }
+
   .countdown {
-    gap: var(--space-xs);
+    gap: 0.25rem;
+    flex-wrap: wrap;
+    justify-content: center;
   }
 
   .countdown__block {
-    min-width: 60px;
+    min-width: 55px;
+  }
+
+  .countdown__digits {
+    font-size: clamp(2rem, 10vw, 3rem);
   }
 
   .countdown__separator {
     font-size: 1.5rem;
-    margin-top: 1rem;
+    margin-top: 0.5rem;
+    padding: 0 0.25rem;
+  }
+
+  .countdown__label {
+    font-size: 0.65rem;
   }
 
   .message {
     padding: var(--space-md);
+    border-radius: 12px;
   }
-}
 
-@media (max-width: 480px) {
-  .countdown__block {
-    min-width: 50px;
+  .message__content {
+    min-height: 100px;
+    font-size: 1rem;
+    line-height: 1.6;
   }
 
   .cta__button {
-    padding: var(--space-sm) var(--space-lg);
+    padding: 0.75rem 1.5rem;
+    font-size: 0.9rem;
+  }
+
+  .celebration {
+    padding: var(--space-sm);
+  }
+
+  .celebration__header {
+    margin-bottom: var(--space-xl);
+  }
+}
+
+/* Small Mobile */
+@media (max-width: 400px) {
+  .countdown {
+    gap: 0.15rem;
+  }
+
+  .countdown__block {
+    min-width: 45px;
+  }
+
+  .countdown__digits {
+    font-size: 1.75rem;
+  }
+
+  .countdown__separator {
+    font-size: 1.25rem;
+    padding: 0 0.15rem;
+  }
+
+  .countdown__label {
+    font-size: 0.6rem;
+  }
+
+  .hero__title {
+    font-size: 1.5rem;
+  }
+
+  .planet--earth {
+    width: 180px;
+    height: 180px;
+    opacity: 0.3;
+  }
+
+  .planet--mars,
+  .planet--purple {
+    display: none;
+  }
+}
+
+/* Landscape Mobile */
+@media (max-height: 500px) and (orientation: landscape) {
+  .main {
+    padding: var(--space-xs);
+  }
+
+  .hero__title {
+    margin-bottom: var(--space-sm);
+  }
+
+  .countdown {
+    margin-bottom: var(--space-sm);
+  }
+
+  .planet--earth {
+    width: 150px;
+    height: 150px;
+    opacity: 0.25;
   }
 }
 
